@@ -68,7 +68,10 @@ class ActivityController extends Controller
      */
     public function show($id)
     {
-        //
+        $activity = Activity::where('id', $id)
+            ->with('user')
+            ->get();
+        return $activity;
     }
 
     /**
