@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -44,12 +45,32 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'number' => 'required|string|unique:users',
+            'avatar' => 'required|string',
             'password' => 'required|string'
         ]);
+
+        if ($request->avatar) {
+            $img = $request->get('avatar');
+            $img = str_replace('data:image/jpeg;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $img = base64_decode($img);
+            $imageName = date('mdYHis') . uniqid() . '.jpeg';
+            Storage::disk('public')->put('users/' . $imageName, $img);
+            $path = "users/" . $imageName;
+            $request->merge(['avatar' => $path]);
+
+            $request->avatar = $path;
+        } else {
+            $request->merge(['avatar' => 'users/default.jpeg']);
+        }
+
+
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->number = $request->number;
+        $user->avatar = $request->avatar;
         $user->password = bcrypt($request->password);
         $user->save();
         return response()->json([

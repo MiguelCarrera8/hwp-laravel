@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
 use App\Activity;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ActivityController extends Controller
 {
@@ -16,8 +16,21 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = Activity::all();
-        return $activities;
+        $date = Carbon::now();
+
+        $date = $date->format('Y-m-d');
+
+        $user_id = Auth::id();
+
+        $activity = Activity::whereNotIn('organizer_id', [$user_id])
+            ->where('date', '>=', $date)
+            ->orderBy('date', 'asc')
+            ->with('user')
+            ->get();
+
+        // $articulos = $activity->orderBy('date', 'desc')->paginate(5);
+
+        return $activity;
     }
 
     /**
@@ -68,9 +81,13 @@ class ActivityController extends Controller
      */
     public function show($id)
     {
+        $user_id = Auth::id();
+
         $activity = Activity::where('id', $id)
+            ->whereNotIn('organizer_id', [$user_id])
             ->with('user')
             ->get();
+
         return $activity;
     }
 
