@@ -45,7 +45,7 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'number' => 'required|string|unique:users',
-            'avatar' => 'required|string',
+            'avatar' => 'string',
             'city' => 'required|string',
             'password' => 'required|string'
         ]);
@@ -72,6 +72,7 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->number = $request->number;
         $user->avatar = $request->avatar;
+        $user->city = $request->city;
         $user->password = bcrypt($request->password);
         $user->save();
         return response()->json([

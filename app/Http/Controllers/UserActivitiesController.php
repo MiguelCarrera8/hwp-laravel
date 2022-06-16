@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Activity;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use App\Activity;
 
-class ActivityController extends Controller
+
+class UserActivitiesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,16 +16,10 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $date = Carbon::now();
-
-        $date = $date->format('Y-m-d');
-
         $user_id = Auth::id();
 
-        $activity = Activity::whereNotIn('organizer_id', [$user_id])
-            ->where('date', '>=', $date)
-            ->orderBy('date', 'asc')
-            ->with('user')
+        $activity = Activity::where('organizer_id', $user_id)
+            ->orderBy('date', 'desc')
             ->get();
 
         return $activity;
@@ -49,26 +43,7 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
-
-        $user_id = Auth::id();
-
-        // dd($user_id);
-
-        $activity = new Activity;
-        $activity->name = $request->title;
-        $activity->description = $request->description;
-        $activity->location = $request->location;
-        $activity->city = $request->city;
-        $activity->hour = $request->hour;
-        $activity->date = $request->date;
-        $activity->organizer_id = $user_id;
-
-        $activity->save();
-
-        return response()->json([
-            'message' => 'Successfully created activity!'
-        ], 201);
+        //
     }
 
     /**
@@ -79,14 +54,7 @@ class ActivityController extends Controller
      */
     public function show($id)
     {
-        $user_id = Auth::id();
-
-        $activity = Activity::where('id', $id)
-            ->whereNotIn('organizer_id', [$user_id])
-            ->with('user')
-            ->get();
-
-        return $activity;
+        //
     }
 
     /**

@@ -22,6 +22,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('user', 'Auth\AuthController@user');
         Route::resources([
             'activities' => 'ActivityController',
+            'usersactivities' => 'UserActivitiesController',
         ]);
     });
 });
