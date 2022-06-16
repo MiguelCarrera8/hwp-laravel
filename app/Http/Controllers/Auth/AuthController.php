@@ -95,4 +95,57 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    /**
+     * Update user profile
+     */
+    public function update(Request $request)
+    {
+        $user_id = Auth::id();
+
+        if ($request->avatar) {
+
+            $request->validate([
+                'name' => 'required|string',
+                'number' => 'required|string',
+                'avatar' => 'string',
+                'city' => 'required|string',
+            ]);
+            $img = $request->get('avatar');
+            $img = str_replace('data:image/jpeg;base64,', '', $img);
+            $img = str_replace(' ', '+', $img);
+            $img = base64_decode($img);
+            $imageName = date('mdYHis') . uniqid() . '.jpeg';
+            Storage::disk('public')->put('users/' . $imageName, $img);
+            $path = "users/" . $imageName;
+            $request->merge(['avatar' => $path]);
+
+            $request->avatar = $path;
+
+            $user = User::find($user_id);
+
+            $user->name = $request->name;
+            $user->number = $request->number;
+            $user->avatar = $request->avatar;
+            $user->city = $request->city;
+
+            $user->save();
+        } else {
+            $request->validate([
+                'name' => 'required|string',
+                'number' => 'required|string',
+                'city' => 'required|string',
+            ]);
+            $user = User::find($user_id);
+            $user->name = $request->name;
+            $user->number = $request->number;
+            $user->city = $request->city;
+
+            $user->save();
+        }
+
+        return response()->json([
+            'message' => 'Successfully updated user!'
+        ], 201);
+    }
 }
