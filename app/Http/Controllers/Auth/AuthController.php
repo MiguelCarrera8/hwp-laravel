@@ -103,6 +103,8 @@ class AuthController extends Controller
     {
         $user_id = Auth::id();
 
+        // dd($user_id);
+
         if ($request->avatar) {
 
             $request->validate([
