@@ -25,6 +25,7 @@ Route::group(['prefix' => 'auth'], function () {
             'activities' => 'ActivityController',
             'usersactivities' => 'UserActivitiesController',
             'images' => 'ImageController',
+            'notifications' => 'NotificationsController',
         ]);
     });
 });
