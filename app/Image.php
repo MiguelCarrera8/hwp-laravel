@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     protected $table = "images_activities";
-    protected $fillable = ['image', 'user_id'];
+    protected $fillable = ['image', 'user_id', 'date'];
 
     public function user()
     {

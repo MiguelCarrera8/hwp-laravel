@@ -61,8 +61,8 @@ class ImageController extends Controller
 
         $image = Image::create([
             'user_id' => $user_id,
-            'image' => $request->image,
             'date' => $date,
+            'image' => $request->image,
         ]);
 
         return response()->json([
