@@ -79,7 +79,12 @@ class ImageController extends Controller
      */
     public function show($id)
     {
-        //
+        $user_id = Auth::id();
+
+        $image = Image::where('user_id', $user_id)
+            ->get();
+
+        return $image;
     }
 
     /**
