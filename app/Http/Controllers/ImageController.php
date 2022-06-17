@@ -17,7 +17,6 @@ class ImageController extends Controller
     public function index()
     {
         $image = Image::all()
-            ->orderBy('created_at', 'desc')
             ->with('user');
         return $image;
     }
