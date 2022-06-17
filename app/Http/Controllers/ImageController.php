@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Image;
+use Carbon\Carbon;
 
 class ImageController extends Controller
 {
@@ -17,7 +18,7 @@ class ImageController extends Controller
     public function index()
     {
         $image = Image::wherenotIn('user_id', [Auth::id()])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('date', 'desc')
             ->with('user')
             ->get();
         return $image;
@@ -41,6 +42,10 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
+        $date = Carbon::now();
+
+        $date = $date->format('Y-m-d');
+
         $user_id = Auth::id();
 
         $img = $request->get('image');
@@ -57,6 +62,7 @@ class ImageController extends Controller
         $image = Image::create([
             'user_id' => $user_id,
             'image' => $request->image,
+            'date' => $date,
         ]);
 
         return response()->json([
