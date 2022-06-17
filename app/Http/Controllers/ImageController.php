@@ -18,7 +18,7 @@ class ImageController extends Controller
     public function index()
     {
         $image = Image::wherenotIn('user_id', [Auth::id()])
-            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->with('user')
             ->get();
         return $image;
@@ -102,7 +102,16 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $image = Image::find($id);
+
+        $image->like_count = $request->like_count;
+
+        $image->save();
+
+        return response()->json([
+            'message' => 'Image updated successfully',
+            'image' => $image,
+        ]);
     }
 
     /**
