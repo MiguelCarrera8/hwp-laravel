@@ -18,7 +18,8 @@ class ImageController extends Controller
     {
         $image = Image::wherenotIn('user_id', [Auth::id()])
             ->orderBy('created_at', 'desc')
-            ->with('user');
+            ->with('user')
+            ->get();
         return $image;
     }
 
