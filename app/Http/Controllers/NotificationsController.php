@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications;
+use Carbon\Carbon;
 
 
 class NotificationsController extends Controller
@@ -19,8 +20,11 @@ class NotificationsController extends Controller
         $user_id = Auth::id();
 
         $notifications = Notifications::where('user_noti_id', $user_id)
+            ->orderBy('date', 'desc')
             ->with('user')
             ->get();
+
+        return $notifications;
     }
 
     /**
@@ -43,10 +47,17 @@ class NotificationsController extends Controller
     {
         $user_id = Auth::id();
 
+        $date = Carbon::now();
+
+        $date = $date->format('Y-m-d');
+
         $notification = Notifications::create([
             'user_id' => $user_id,
             'user_noti_id' => $request->user_noti_id,
+            'date' => $date,
         ]);
+
+        return $notification;
     }
 
     /**
